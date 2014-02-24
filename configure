@@ -738,7 +738,6 @@ then
         if [ $config_python_path == auto ]
 	then
 	        python=$(which python)
-		python_path=$(dirname $python)
 
 	elif [ -n "$PYTHON" ] && check_file ${PYTHON}
 	then	
@@ -784,8 +783,8 @@ if not sysconfig.get_config_var('Py_ENABLE_SHARED'):
 libs.extend(sysconfig.get_config_var('LINKFORSHARED').split())
 print ' '.join(libs)
 EOF
-				python_ccflags=`cat $python_ccflags_file`
-				python_ldflags=`cat $python_ldflags_file`
+				python_ccflags=$(python-config --cflags)
+				python_ldflags=$(python-config --ldflags)
 				rm $python_ccflags_file
 				rm $python_ldflags_file
 
