@@ -724,7 +724,12 @@ fi
 
 if [ $config_python_path != no ]
 then
-	if [ -n "$PYTHON" ] && check_file ${PYTHON}
+        if [ $config_python_path == auto ]
+	then
+	        python=$(which python)
+		python_path=$(dirname $python)
+
+	elif [ -n "$PYTHON" ] && check_file ${PYTHON}
 	then	
 		python=${PYTHON}
 	elif check_file ${python_path}/bin/python2
