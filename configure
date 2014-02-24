@@ -206,6 +206,10 @@ do
 			perl_path=$1
 			config_perl_path=yes
 			;;
+	        --without-perl)
+		        shift
+			config_perl_path=no
+			;;
 		--with-python-path)
 			shift
 			python_path=$1
