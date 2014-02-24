@@ -215,6 +215,10 @@ do
 			python_path=$1
 			config_python_path=yes
 			;;
+	        --without-python)
+		        shift
+			config_python_path=no
+			;;
 		--with-xrootd-path)
 			shift
 			xrootd_path=$1
