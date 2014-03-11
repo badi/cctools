@@ -13,13 +13,14 @@ save_arguments $0 $@
 
 major=3
 minor=7
-micro=3
+micro=4
+fork=.badi
 
 # On a release, type would be changed from TRUNK to RELEASE.  TRUNK is a useful
 # signal that the user is not using a blessed (tagged) release.
 type="RELEASE"
 
-version="$major.$minor.$micro $type"
+version="$major.$minor.$micro$fork $type"
 
 # The release date is set automatically at configure time (the default).
 # For a tagged release, this should be the hard-coded date of the release.
