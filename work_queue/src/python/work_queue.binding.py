@@ -12,6 +12,7 @@
 # - @ref work_queue::Task
 
 import os
+import copy
 
 def set_debug_flag(*flags):
     for flag in flags:
@@ -55,6 +56,18 @@ class Task(_object):
             flags &= ~WORK_QUEUE_CACHE
 
         return flags
+
+    ##
+    # Return a functionally equivalent copy of this task
+    #
+    def clone(self):
+        """
+        Return a functionally equivalent copy of this task that can also
+        be submitted to the WorkQueue.
+        """
+        new = copy.copy(self)
+        new._task = work_queue_task_clone(self._task)
+        return new
    
     ##
     # Set the worker selection algorithm for task.
