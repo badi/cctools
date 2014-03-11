@@ -18,20 +18,16 @@ work_queue_wrap.c work_queue.py: ../work_queue.i work_queue.binding.py
 work_queue_wrap.o: work_queue_wrap.c
 	${CCTOOLS_CC} -fPIC -c $< -o $@ ${ccflags}
 
-# The odd symlink in the following rule is necessary to overcome a problem
-# in the framework search path emitted by the Python configuration on macOS.
-
 _work_queue.${CCTOOLS_DYNAMIC_SUFFIX}: work_queue_wrap.o ${CCTOOLS_HOME}/dttools/src/libdttools.a
-	@ln -sf /System/Library/Frameworks/Python.framework . 
 	${CCTOOLS_LD} ${CCTOOLS_DYNAMIC_FLAG} $< -o $@ ${CCTOOLS_INTERNAL_LDFLAGS} ${ldflags}
-	@rm Python.framework
+
 
 test: all
 	@echo running work queue python binding tests
 	@${CCTOOLS_HOME}/dttools/src/test_runner.sh TR_*.sh
 
 clean:
-	rm -fr Python.framework _work_queue.${CCTOOLS_DYNAMIC_SUFFIX} work_queue.py work_queue_wrap.* *.pyc
+	rm -fr _work_queue.${CCTOOLS_DYNAMIC_SUFFIX} work_queue.py work_queue_wrap.* *.pyc
 
 install: all
 	mkdir -p ${CCTOOLS_INSTALL_DIR}/doc

@@ -2147,6 +2147,36 @@ struct work_queue_task *work_queue_task_create(const char *command_line)
 	return t;
 }
 
+struct work_queue_task *work_queue_task_clone(const struct work_queue_task *task)
+{
+  struct work_queue_task *new = malloc(sizeof(*new));
+  memcpy(new, task, sizeof(*new));
+
+  /*
+    Need to copy over the following fields otherwise segfaults abound:
+
+    tag			:: char *
+    command_line	:: char *
+    output		:: char *
+    input_files		:: list *
+    output_files	:: list *
+    host		:: char *
+    hostname		:: char *
+   */
+
+  if(task->tag         ) { new->tag          = strdup(task->tag)         ; }
+  if(task->command_line) { new->command_line = strdup(task->command_line); }
+
+  new->input_files  = list_duplicate(task->input_files);
+  new->output_files = list_duplicate(task->output_files);
+
+  if(task->output  ) { new->output   = strdup(task->output)  ; }
+  if(task->host    ) { new->host     = strdup(task->host)    ; }
+  if(task->hostname) { new->hostname = strdup(task->hostname); }
+
+  return new;
+}
+
 void work_queue_task_specify_tag(struct work_queue_task *t, const char *tag)
 {
 	if(t->tag)

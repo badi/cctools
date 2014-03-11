@@ -293,6 +293,7 @@ Where options are:
   --strict
   --globus-flavor      <flavor>
   --xrootd-arch        <arch>
+  --without-PACKAGE
   --with-PACKAGE-path  <path>
   --without-system-SYSTEM
 
@@ -775,16 +776,18 @@ if not syscfgflags is None:
     flags.extend(syscfgflags.split())
 print ' '.join(flags)
 EOF
+
+				echo Getting LDFLAGS
 				env HOME=/var/empty ${python} > $python_ldflags_file <<EOF
 from distutils import sysconfig
 libs = sysconfig.get_config_var('LIBS').split() + sysconfig.get_config_var('SYSLIBS').split()
 if not sysconfig.get_config_var('Py_ENABLE_SHARED'):
     libs.insert(0, '-L' + sysconfig.get_config_var('LIBPL'))
-libs.extend(sysconfig.get_config_var('LINKFORSHARED').split())
 print ' '.join(libs)
 EOF
-				python_ccflags=$(python-config --cflags)
-				python_ldflags=$(python-config --ldflags)
+
+				python_ccflags=$(cat $python_ccflags_file)
+				python_ldflags=$(cat $python_ldflags_file)
 				rm $python_ccflags_file
 				rm $python_ldflags_file
 
@@ -941,7 +944,7 @@ fi
 ccflags="${ccflags} -DINSTALL_PATH='\"${install_path}\"' $debug_flag -D_REENTRANT -D_GNU_SOURCE -DBUILD_USER='\"$build_user\"' -DBUILD_HOST='\"$build_host\"' -DCCTOOLS_VERSION_MAJOR=$major -DCCTOOLS_VERSION_MINOR=$minor -DCCTOOLS_VERSION_MICRO='\"$micro\"' -DCCTOOLS_VERSION='\"$version\"' -DCCTOOLS_RELEASE_DATE='\"$release_date\"' -DCCTOOLS_CONFIGURE_ARGUMENTS='\"$configure_arguments\"' -DCCTOOLS_SYSTEM_INFORMATION='\"$system_information\"' -DCCTOOLS_OPSYS_${build_sys} -DCCTOOLS_CPU_${build_cpu}"
 ldflags="${ldflags} ${debug_flag}"
 
-if [ $include_package_parrot = "parrot" ]
+if [ "$include_package_parrot" = "parrot" ]
 then
 
 	cat <<EOF > libparrot.test.c
