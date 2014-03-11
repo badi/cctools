@@ -123,6 +123,16 @@ and @ref work_queue_task_specify_buffer, the task should be passed to @ref work_
 */
 struct work_queue_task *work_queue_task_create(const char *full_command);
 
+
+/** Create a copy of a task
+
+Create a functionally identical copy of a @ref work_queue_task that
+can be re-submitted to the @ref work_queue.
+
+@return A new task object
+*/
+struct work_queue_task *work_queue_task_clone(const struct work_queue_task *task);
+
 /** Add a file to a task.
 @param t A task object.
 @param local_name The name of the file on local disk or shared filesystem.
