@@ -1,0 +1,7 @@
+*.o
+*.dSYM
+*.gz
+*.html
+.DS_Store
+Makefile.config
+configure.rerun
