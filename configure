@@ -293,6 +293,7 @@ Where options are:
   --strict
   --globus-flavor      <flavor>
   --xrootd-arch        <arch>
+  --without-PACKAGE
   --with-PACKAGE-path  <path>
   --without-system-SYSTEM
 
