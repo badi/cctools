@@ -2147,6 +2147,32 @@ struct work_queue_task *work_queue_task_create(const char *command_line)
 	return t;
 }
 
+struct work_queue_file *work_queue_file_clone(const struct work_queue_file *file)
+{
+  const int file_t_size = sizeof(struct work_queue_file);
+  struct work_queue_file *new = calloc(1, file_t_size);
+  memcpy(new, file, file_t_size);
+  new->payload = strdup(file->payload);
+  new->remote_name = strdup(file->remote_name);
+  return new;
+}
+
+
+struct list *work_queue_task_file_list_clone(struct list *list)
+{
+  struct list *new = list_create();
+  struct work_queue_file
+    *old_file,
+    *new_file;
+
+  list_first_item(list);
+  while ((old_file = list_next_item(list))) {
+    new_file = work_queue_file_clone(old_file);
+    list_push_tail(new, new_file);
+  }
+  return new;
+}
+
 struct work_queue_task *work_queue_task_clone(const struct work_queue_task *task)
 {
   struct work_queue_task *new = malloc(sizeof(*new));
@@ -2167,8 +2193,8 @@ struct work_queue_task *work_queue_task_clone(const struct work_queue_task *task
   if(task->tag         ) { new->tag          = strdup(task->tag)         ; }
   if(task->command_line) { new->command_line = strdup(task->command_line); }
 
-  new->input_files  = list_duplicate(task->input_files);
-  new->output_files = list_duplicate(task->output_files);
+  new->input_files  = work_queue_task_file_list_clone(task->input_files);
+  new->output_files = work_queue_task_file_list_clone(task->output_files);
 
   if(task->output  ) { new->output   = strdup(task->output)  ; }
   if(task->host    ) { new->host     = strdup(task->host)    ; }
